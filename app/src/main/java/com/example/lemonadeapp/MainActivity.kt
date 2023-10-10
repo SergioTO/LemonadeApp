@@ -50,8 +50,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Lemonade(name: String, modifier: Modifier = Modifier) {
-    var randomNumberNeededTap = (2..4).random()
-    var currentNumberTapInSecondImage = 0
+    val randomNumberNeededTap = (2..4).random()
+    var currentNumberTapInSecondImage by remember { mutableStateOf( 0) }
     var currentImageText by remember { mutableStateOf( 0) }
 
     val image = ArrayList<Int>()
@@ -72,8 +72,14 @@ fun Lemonade(name: String, modifier: Modifier = Modifier) {
     var currentImage = image[0]
 
      when(currentImageText) {
-         else -> {currentText=texto[currentImageText]
-             currentImage=image[currentImageText]}
+         else -> {
+             if(currentImageText==1){
+                 currentText = texto[1] + " ($currentNumberTapInSecondImage squeeze of $randomNumberNeededTap)"
+             }
+             else{          currentText=texto[currentImageText]}
+
+             currentImage=image[currentImageText]
+         }
     }
 
     Box(
@@ -91,15 +97,11 @@ fun Lemonade(name: String, modifier: Modifier = Modifier) {
                         currentText += " (0 squeeze)"
                     }
                     else if (currentImageText==1){
-                        currentNumberTapInSecondImage++
-                        if(randomNumberNeededTap==currentNumberTapInSecondImage)
+                        currentNumberTapInSecondImage += 1
+                        if(randomNumberNeededTap<=currentNumberTapInSecondImage)
                         {
                             currentImageText=2
                             currentNumberTapInSecondImage=0
-                        }
-                        else
-                        {
-                            currentText = texto[1] + " ($currentNumberTapInSecondImage squeeze)"
                         }
                     }
                     else if (currentImageText==2){
@@ -114,7 +116,7 @@ fun Lemonade(name: String, modifier: Modifier = Modifier) {
             ) {
                 Image(
                     painter = painterResource(currentImage),
-                    contentDescription = stringResource(contentDescriptionResourceId),
+                    contentDescription = null,
                     modifier = Modifier
                         .width(dimensionResource(R.dimen.button_image_width))
                         .height(dimensionResource(R.dimen.button_image_height))
