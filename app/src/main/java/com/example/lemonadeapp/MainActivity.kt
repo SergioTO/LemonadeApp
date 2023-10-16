@@ -41,9 +41,102 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Lemonade("Android")
+                   // Lemonade("Android")
+                    Lemonade2()
                 }
             }
+        }
+    }
+}
+@Composable
+fun Lemonade2(modifier: Modifier = Modifier)
+{
+    val randomNumberNeededTap = (2..4).random()
+    val image = ArrayList<Int>()
+    val texto = ArrayList<String>()
+    image.add(R.drawable.lemon_tree)
+    image.add(R.drawable.lemon_squeeze)
+    image.add(R.drawable.lemon_drink)
+    image.add(R.drawable.lemon_restart)
+    texto.add(stringResource(R.string.lemon_tree))
+    texto.add(stringResource(R.string.lemon_squeeze))
+    texto.add(stringResource(R.string.lemon_drink))
+    texto.add(stringResource(R.string.lemon_restart))
+
+ ff(randomNumberNeededTap,image,texto)
+}
+@Composable
+fun ff(randomNumberNeededTap2: Int, image: ArrayList<Int>, texto: ArrayList<String>) {
+    var randomNumberNeededTap by remember {mutableStateOf(0)};
+    var currentNumberTapInSecondImage by remember { mutableStateOf( 0) }
+    var currentImageText by remember { mutableStateOf( 0) }
+    var currentText = texto[0]
+    var currentImage = image[0]
+
+    when(currentImageText) {
+        else -> {
+            if(currentImageText==1){
+                //currentText = texto[1] + " ($currentNumberTapInSecondImage squeeze of $randomNumberNeededTap)"
+            }
+            else{          currentText=texto[currentImageText]}
+
+            currentImage=image[currentImageText]
+        }
+    }
+
+    if(currentImageText==1)
+    {
+        currentText = texto[1] + " ($currentNumberTapInSecondImage squeeze of $randomNumberNeededTap)"
+    }
+
+    Box(
+        // modifier = modifier
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Button(
+                onClick = {
+                    if(currentImageText==0){
+                        randomNumberNeededTap=(2..4).random()
+                        currentImageText=1
+                        currentText += " (0 squeeze)"
+                    }
+                    else if (currentImageText==1){
+
+                        currentNumberTapInSecondImage += 1
+                        if(randomNumberNeededTap<=currentNumberTapInSecondImage)
+                        {
+                            currentImageText=2
+                            currentNumberTapInSecondImage=0
+                        }
+                    }
+                    else if (currentImageText==2){
+                        currentImageText=3
+                    }
+                    else if (currentImageText==3){
+                        currentImageText=0
+                    }
+                },
+                shape = RoundedCornerShape(dimensionResource(R.dimen.button_corner_radius)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
+            ) {
+                Image(
+                    painter = painterResource(currentImage),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(dimensionResource(R.dimen.button_image_width))
+                        .height(dimensionResource(R.dimen.button_image_height))
+                        .padding(dimensionResource(R.dimen.button_interior_padding))
+                )
+            }
+            Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_vertical)))
+            Text(
+                text = currentText,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }
